@@ -62,15 +62,26 @@ def run_image_agent(product_name: str, category: str, intro: str) -> str:
     return str(file_path)
 
 
+def _load_font(size: int) -> ImageFont.FreeTypeFont:
+    """플랫폼별 한국어 지원 폰트를 로드한다."""
+    candidates = [
+        "malgun.ttf",                                      # Windows 맑은 고딕
+        "malgunbd.ttf",                                    # Windows 맑은 고딕 Bold
+        "/usr/share/fonts/truetype/nanum/NanumGothic.ttf", # Linux (fonts-nanum)
+        "/usr/share/fonts/truetype/nanum/NanumBarunGothic.ttf",
+        "arial.ttf",
+    ]
+    for path in candidates:
+        try:
+            return ImageFont.truetype(path, size)
+        except Exception:
+            continue
+    return ImageFont.load_default()
+
+
 def _draw_text_centered(draw, text: str, y: int, width: int, font_size: int, color: str):
     """텍스트를 수평 중앙에 그린다."""
-    try:
-        font = ImageFont.truetype("malgun.ttf", font_size)  # Windows 맑은 고딕
-    except Exception:
-        try:
-            font = ImageFont.truetype("arial.ttf", font_size)
-        except Exception:
-            font = ImageFont.load_default()
+    font = _load_font(font_size)
 
     bbox = draw.textbbox((0, 0), text, font=font)
     text_width = bbox[2] - bbox[0]
