@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     blogger_blog_id: str = ""
     blogger_client_id: str = ""
     blogger_client_secret: str = ""
+    blogger_refresh_token: str = ""  # 배포 환경용 (blogger_token.json 대체)
 
     # 슬랙 알림
     slack_webhook_url: str = ""

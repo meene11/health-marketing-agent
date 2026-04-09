@@ -23,15 +23,21 @@ AUTH_URL = "https://oauth2.googleapis.com/token"
 
 
 def _get_access_token() -> str:
-    """저장된 토큰으로 액세스 토큰을 가져온다. 만료 시 자동 갱신."""
-    if not TOKEN_FILE.exists():
-        raise RuntimeError(
-            "blogger_token.json이 없습니다. "
-            "python tools/blogger_auth.py 를 먼저 실행해 인증을 완료하세요."
-        )
+    """저장된 토큰으로 액세스 토큰을 가져온다. 만료 시 자동 갱신.
+    환경변수 BLOGGER_REFRESH_TOKEN 우선, 없으면 blogger_token.json 사용."""
 
-    token_data = json.loads(TOKEN_FILE.read_text())
-    refresh_token = token_data.get("refresh_token")
+    # 1. 환경변수 우선 (배포 환경)
+    refresh_token = settings.blogger_refresh_token
+
+    # 2. 로컬 파일 폴백
+    if not refresh_token:
+        if not TOKEN_FILE.exists():
+            raise RuntimeError(
+                "blogger_token.json이 없습니다. "
+                "python tools/blogger_auth.py 를 먼저 실행해 인증을 완료하세요."
+            )
+        token_data = json.loads(TOKEN_FILE.read_text())
+        refresh_token = token_data.get("refresh_token")
 
     if not refresh_token:
         raise RuntimeError("refresh_token이 없습니다. 재인증이 필요합니다.")
