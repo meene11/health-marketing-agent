@@ -55,7 +55,18 @@ def _get_access_token() -> str:
     return new_data["access_token"]
 
 
-def post_to_blogger(title: str, content: str) -> str:
+def _image_to_base64_tag(image_path: str) -> str:
+    """이미지 파일을 base64 인코딩해서 HTML img 태그로 반환한다."""
+    from pathlib import Path
+    import base64
+    path = Path(image_path)
+    if not path.exists():
+        return ""
+    data = base64.b64encode(path.read_bytes()).decode()
+    return f'<img src="data:image/png;base64,{data}" style="width:100%;max-width:600px;display:block;margin:0 auto 20px;" />'
+
+
+def post_to_blogger(title: str, content: str, image_path: str = "") -> str:
     """Blogger에 포스팅을 발행한다."""
     if not settings.blogger_blog_id:
         return "Blogger 설정 미완료 (BLOGGER_BLOG_ID 필요)"
@@ -72,8 +83,17 @@ def post_to_blogger(title: str, content: str) -> str:
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json",
     }
+
+    # 이미지 삽입 (base64)
+    image_tag = ""
+    if image_path:
+        print("  [Blogger] 이미지 변환 중...")
+        image_tag = _image_to_base64_tag(image_path)
+
     # 마크다운 → HTML 기본 변환
-    html_content = content.replace("\n", "<br>").replace("**", "<b>").replace("**", "</b>")
+    html_content = content.replace("\n", "<br>")
+    if image_tag:
+        html_content = image_tag + html_content
 
     payload = {
         "kind": "blogger#post",
@@ -82,7 +102,7 @@ def post_to_blogger(title: str, content: str) -> str:
     }
 
     try:
-        response = httpx.post(url, json=payload, headers=headers, timeout=15)
+        response = httpx.post(url, json=payload, headers=headers, timeout=30)
         if response.status_code in (200, 201):
             data = response.json()
             post_url = data.get("url", f"https://{settings.blogger_blog_id}.blogspot.com")

@@ -21,11 +21,11 @@ def run_publisher(
     if "WordPress" in platforms:
         print("  [Publisher] WordPress 발행 중...")
         from tools.wordpress_tools import post_to_wordpress
-        results["wordpress"] = post_to_wordpress(title=title, content=content)
+        results["wordpress"] = post_to_wordpress(title=title, content=content, image_path=image_path)
 
     if "Blogger" in platforms:
         print("  [Publisher] Blogger 발행 중...")
         from tools.blogger_tools import post_to_blogger
-        results["blogger"] = post_to_blogger(title=title, content=content)
+        results["blogger"] = post_to_blogger(title=title, content=content, image_path=image_path)
 
     return results

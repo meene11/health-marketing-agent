@@ -50,8 +50,8 @@ st.subheader("📢 발행 플랫폼")
 
 platforms = st.multiselect(
     "발행할 플랫폼을 선택하세요 *",
-    ["네이버 블로그", "WordPress", "Blogger"],
-    default=["네이버 블로그", "WordPress"],
+    ["WordPress", "Blogger", "Facebook"],
+    default=["WordPress", "Blogger"],
 )
 
 st.divider()

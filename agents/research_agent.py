@@ -7,7 +7,7 @@ def run_research(product_name: str, category: str, strengths: str) -> str:
     건강 DB + DuckDuckGo 검색으로 마케팅 자료를 수집한다.
     """
     print("  [Research] Supabase 건강 DB 조회 중...")
-    db_result = fetch_health_data(keyword=product_name)
+    db_result = fetch_health_data(keyword=product_name, category=category)
 
     print("  [Research] DuckDuckGo 웹 검색 중...")
     search_result = search_health_info(keyword=f"{product_name} {category}")
