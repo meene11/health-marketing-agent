@@ -34,8 +34,9 @@ def _upload_image(site: str, image_path: str, auth_headers: dict) -> int | None:
         response = httpx.post(url, content=path.read_bytes(), headers=headers, timeout=30)
         if response.status_code in (200, 201):
             return response.json().get("id")
-    except Exception:
-        pass
+        print(f"  [WordPress] 이미지 업로드 실패 ({response.status_code}): {response.text[:200]}")
+    except Exception as e:
+        print(f"  [WordPress] 이미지 업로드 오류: {e}")
     return None
 
 
