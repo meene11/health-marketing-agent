@@ -1,4 +1,19 @@
+import os
 from pydantic_settings import BaseSettings
+
+
+def _inject_streamlit_secrets():
+    """Streamlit Cloud secrets를 환경변수로 주입한다."""
+    try:
+        import streamlit as st
+        for key, value in st.secrets.items():
+            if isinstance(value, str) and key not in os.environ:
+                os.environ[key.upper()] = value
+    except Exception:
+        pass
+
+
+_inject_streamlit_secrets()
 
 
 class Settings(BaseSettings):
