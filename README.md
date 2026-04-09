@@ -3,7 +3,7 @@
 > AI 멀티에이전트 기반 건강 마케팅 자동 포스팅 시스템  
 > **실행 비용 $0** · Streamlit 웹 UI · WordPress + Blogger 동시 발행
 
-**🚀 배포 URL**: [Streamlit 앱 URL을 여기에 입력하세요]
+**🚀 배포 URL**: https://health-marketing-agent.streamlit.app/
 
 ---
 
