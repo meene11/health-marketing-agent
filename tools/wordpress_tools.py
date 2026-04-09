@@ -4,12 +4,21 @@ from pathlib import Path
 from config.settings import settings
 
 
-def _get_auth_token() -> str:
-    credentials = f"{settings.wordpress_username}:{settings.wordpress_app_password}"
-    return base64.b64encode(credentials.encode()).decode()
+def _get_auth_headers() -> dict | None:
+    """OAuth2 또는 Basic Auth 헤더를 반환한다."""
+    # OAuth2 우선 (무료 플랜)
+    if settings.wordpress_access_token:
+        return {"Authorization": f"Bearer {settings.wordpress_access_token}"}
+    # Basic Auth 폴백 (유료 플랜 앱 비밀번호)
+    if settings.wordpress_username and settings.wordpress_app_password:
+        token = base64.b64encode(
+            f"{settings.wordpress_username}:{settings.wordpress_app_password}".encode()
+        ).decode()
+        return {"Authorization": f"Basic {token}"}
+    return None
 
 
-def _upload_image(site: str, image_path: str, token: str) -> int | None:
+def _upload_image(site: str, image_path: str, auth_headers: dict) -> int | None:
     """이미지를 WordPress 미디어 라이브러리에 업로드하고 media ID를 반환한다."""
     path = Path(image_path)
     if not path.exists():
@@ -17,7 +26,7 @@ def _upload_image(site: str, image_path: str, token: str) -> int | None:
 
     url = f"https://public-api.wordpress.com/wp/v2/sites/{site}/media"
     headers = {
-        "Authorization": f"Basic {token}",
+        **auth_headers,
         "Content-Disposition": f'attachment; filename="{path.name}"',
         "Content-Type": "image/png",
     }
@@ -32,14 +41,17 @@ def _upload_image(site: str, image_path: str, token: str) -> int | None:
 
 def post_to_wordpress(title: str, content: str, image_path: str = "") -> str:
     """WordPress.com REST API로 글을 발행한다."""
-    if not settings.wordpress_site or not settings.wordpress_username or not settings.wordpress_app_password:
-        return "WordPress 설정 미완료 (WORDPRESS_SITE, USERNAME, APP_PASSWORD 필요)"
+    if not settings.wordpress_site:
+        return "WordPress 설정 미완료 (WORDPRESS_SITE 필요)"
+
+    auth_headers = _get_auth_headers()
+    if not auth_headers:
+        return "WordPress 설정 미완료 (WORDPRESS_ACCESS_TOKEN 또는 USERNAME+APP_PASSWORD 필요)"
 
     site = settings.wordpress_site.replace("https://", "").replace("http://", "").rstrip("/")
-    token = _get_auth_token()
 
     headers = {
-        "Authorization": f"Basic {token}",
+        **auth_headers,
         "Content-Type": "application/json",
     }
 
@@ -47,7 +59,7 @@ def post_to_wordpress(title: str, content: str, image_path: str = "") -> str:
     media_id = None
     if image_path:
         print("  [WordPress] 이미지 업로드 중...")
-        media_id = _upload_image(site, image_path, token)
+        media_id = _upload_image(site, image_path, auth_headers)
         if media_id:
             print(f"  [WordPress] 이미지 업로드 완료 (ID: {media_id})")
 

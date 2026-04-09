@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     wordpress_site: str = ""
     wordpress_username: str = ""
     wordpress_app_password: str = ""
+    wordpress_client_id: str = ""
+    wordpress_client_secret: str = ""
+    wordpress_access_token: str = ""  # OAuth2 방식 (무료 플랜용)
 
     # Blogger (구글 블로그)
     blogger_blog_id: str = ""
