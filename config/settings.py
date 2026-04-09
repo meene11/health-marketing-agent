@@ -17,9 +17,10 @@ class Settings(BaseSettings):
     wordpress_username: str = ""
     wordpress_app_password: str = ""
 
-    # Facebook
-    facebook_page_id: str = ""
-    facebook_page_access_token: str = ""
+    # Blogger (구글 블로그)
+    blogger_blog_id: str = ""
+    blogger_client_id: str = ""
+    blogger_client_secret: str = ""
 
     # 슬랙 알림
     slack_webhook_url: str = ""

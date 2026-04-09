@@ -50,7 +50,7 @@ st.subheader("📢 발행 플랫폼")
 
 platforms = st.multiselect(
     "발행할 플랫폼을 선택하세요 *",
-    ["네이버 블로그", "WordPress", "Facebook"],
+    ["네이버 블로그", "WordPress", "Blogger"],
     default=["네이버 블로그", "WordPress"],
 )
 
@@ -89,7 +89,7 @@ if st.button("🚀 자동 포스팅 시작", disabled=not ready, type="primary",
             # 발행 결과
             st.subheader("발행 결과")
             for platform, url in final_state["published_urls"].items():
-                icon = {"naver": "N", "wordpress": "W", "facebook": "F"}.get(platform, "-")
+                icon = {"naver": "N", "wordpress": "W", "blogger": "B"}.get(platform, "-")
                 st.markdown(f"**[{icon}]** {url}")
 
             # 생성된 글 미리보기

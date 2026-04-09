@@ -23,10 +23,9 @@ def run_publisher(
         from tools.wordpress_tools import post_to_wordpress
         results["wordpress"] = post_to_wordpress(title=title, content=content)
 
-    if "Facebook" in platforms:
-        print("  [Publisher] Facebook 발행 중...")
-        from tools.facebook_tools import post_to_facebook, build_caption
-        caption = build_caption(title=title, intro=intro, strengths=strengths, tone=tone)
-        results["facebook"] = post_to_facebook(image_path=image_path, caption=caption)
+    if "Blogger" in platforms:
+        print("  [Publisher] Blogger 발행 중...")
+        from tools.blogger_tools import post_to_blogger
+        results["blogger"] = post_to_blogger(title=title, content=content)
 
     return results
