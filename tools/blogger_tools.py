@@ -28,6 +28,7 @@ def _get_access_token() -> str:
 
     # 1. 환경변수 우선 (배포 환경)
     refresh_token = settings.blogger_refresh_token
+    use_file = False
 
     # 2. 로컬 파일 폴백
     if not refresh_token:
@@ -38,6 +39,7 @@ def _get_access_token() -> str:
             )
         token_data = json.loads(TOKEN_FILE.read_text())
         refresh_token = token_data.get("refresh_token")
+        use_file = True
 
     if not refresh_token:
         raise RuntimeError("refresh_token이 없습니다. 재인증이 필요합니다.")
@@ -54,9 +56,11 @@ def _get_access_token() -> str:
         raise RuntimeError(f"토큰 갱신 실패: {response.text}")
 
     new_data = response.json()
-    # 갱신된 토큰 저장
-    token_data["access_token"] = new_data["access_token"]
-    TOKEN_FILE.write_text(json.dumps(token_data))
+
+    # 로컬 파일 사용 시에만 파일 업데이트
+    if use_file:
+        token_data["access_token"] = new_data["access_token"]
+        TOKEN_FILE.write_text(json.dumps(token_data))
 
     return new_data["access_token"]
 
