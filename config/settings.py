@@ -2,20 +2,6 @@ import os
 from pydantic_settings import BaseSettings
 
 
-def _inject_streamlit_secrets():
-    """Streamlit Cloud secrets를 환경변수로 주입한다."""
-    try:
-        import streamlit as st
-        for key, value in st.secrets.items():
-            if isinstance(value, str) and key not in os.environ:
-                os.environ[key.upper()] = value
-    except Exception:
-        pass
-
-
-_inject_streamlit_secrets()
-
-
 class Settings(BaseSettings):
     # Supabase (건강 DB)
     supabase_url: str = ""
@@ -48,3 +34,16 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+
+def refresh_from_streamlit():
+    """Streamlit secrets에서 settings 값을 직접 업데이트한다."""
+    try:
+        import streamlit as st
+        for key, value in st.secrets.items():
+            if isinstance(value, str):
+                attr = key.lower()
+                if hasattr(settings, attr):
+                    object.__setattr__(settings, attr, value)
+    except Exception:
+        pass

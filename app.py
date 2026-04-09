@@ -64,6 +64,8 @@ if not ready:
 
 if st.button("🚀 자동 포스팅 시작", disabled=not ready, type="primary", use_container_width=True):
     with st.spinner("파이프라인 실행 중..."):
+        from config.settings import refresh_from_streamlit
+        refresh_from_streamlit()
         from orchestrator.workflow import run_pipeline
 
         user_input = {
