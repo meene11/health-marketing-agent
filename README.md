@@ -151,4 +151,4 @@ SLACK_WEBHOOK_URL = "..."
 
 ## 관련 프로젝트
 
-- [auto-multi-agent](https://github.com/meene11/auto-multi-agent) — IT 뉴스 자동 블로그 발행 시스템 (선행 프로젝트)
+- [itnews-multi-agent](https://github.com/meene11/itnews-multi-agent) — IT 뉴스 자동 블로그 발행 시스템 (선행 프로젝트)
