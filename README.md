@@ -7,12 +7,12 @@
 
 ---
 
-## 발행 블로그
+## 자동화 발행 블로그
 
-| 플랫폼 | 주소 |
-|---|---|
-| WordPress | https://healthvibeamyagent.wordpress.com |
-| Blogger | https://healthamyagent.blogspot.com |
+| 플랫폼 | 주소 | 방식 | 특징 |
+|---|---|---|---|
+| WordPress | https://healthvibeamyagent.wordpress.com | REST API + OAuth2 | 완전 자동, 이미지 첨부 지원 |
+| Blogger | https://healthamyagent.blogspot.com | Google Blogger API v3 | 완전 자동, 이미지 base64 인라인 삽입 |
 
 ---
 
@@ -46,7 +46,7 @@
 | 에이전트 | 역할 | 기술 |
 |---|---|---|
 | Research Agent | 건강 DB 조회 + 웹 검색으로 자료 수집 | Supabase + DuckDuckGo |
-| Writer Agent | 마케팅 블로그 포스팅 자동 생성 | Python 템플릿 (LLM 없음) |
+| Writer Agent | 마케팅 블로그 포스팅 자동 생성 + SEO/GEO 최적화 구조 적용 (헤딩·훅·CTA·리서치 기반 콘텐츠) | Python 템플릿 (LLM 없음) |
 | Image Agent | 카테고리별 홍보 이미지 생성 | Pillow |
 | Publisher Agent | WordPress + Blogger 동시 발행 | REST API + OAuth2 |
 | Notification Agent | 발행 완료 Slack 알림 | Slack Incoming Webhook |
